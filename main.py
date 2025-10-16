@@ -1,17 +1,17 @@
 #!/usr/bin/env python3
 """
-osu!mania -> Eity map.lua converter
+osu!mania -> Vectra map.lua converter
 
 Reads an osu! .osu file (mania ruleset) and writes a Lua map file compatible
-with the Eity game format found in `Eity/maps/*/map.lua`.
+with the Vectra game format found in `Vectra/maps/*/map.lua`.
 
 Basic mapping rules implemented:
-- osu mania columns mapped to x positions used in Eity maps (4-key layout by default)
+- osu mania columns mapped to x positions used in Vectra maps (4-key layout by default)
 - Hit objects (notes) become entries in map:getNotes() with format:
   {type, x, speed, slider_length, time}
   where `type` is 1 for normal notes.
 
-Usage: python tools/osu_to_eity.py input.osu output_folder [--keys 4]
+Usage: python tools/osu_to_vectra.py input.osu output_folder [--keys 4]
 
 This is a minimal, dependency-free script. It expects standard osu mania .osu files.
 """
@@ -78,12 +78,12 @@ def load_osu_file(path: str) -> str:
         return f.read()
 
 
-def map_column_x_to_eity_x(x: int,
+def map_column_x_to_Vectra_x(x: int,
                            keys: int,
                            osu_playfield_width: int = 512) -> int:
-    """Map osu x coordinate (0..osu_playfield_width) to Eity x values.
+    """Map osu x coordinate (0..osu_playfield_width) to Vectra x values.
 
-    Eity maps appear to use x values across a range (e.g., 0..512 or other). We'll
+    Vectra maps appear to use x values across a range (e.g., 0..512 or other). We'll
     map columns evenly into the osu playfield width and output the center x.
     """
     # compute column width
@@ -94,10 +94,10 @@ def map_column_x_to_eity_x(x: int,
         col = 0
     if col >= keys:
         col = keys - 1
-    # map to Eity x coordinate: use center of column in 0..512 range
-    eity_x = int(col * (osu_playfield_width / keys) +
+    # map to Vectra x coordinate: use center of column in 0..512 range
+    Vectra_x = int(col * (osu_playfield_width / keys) +
                  (osu_playfield_width / keys) / 2)
-    return eity_x
+    return Vectra_x
 
 
 def generate_map_lua(title: str,
@@ -146,8 +146,8 @@ def generate_map_lua(title: str,
 
     lines = []
     for n in notes:
-        # map osu x to eity x using default 512 playfield
-        ex = map_column_x_to_eity_x(n['x'], keys)
+        # map osu x to Vectra x using default 512 playfield
+        ex = map_column_x_to_Vectra_x(n['x'], keys)
         t = 1  # normal note
         speed = 400
         slider_len = 0
@@ -166,8 +166,8 @@ def generate_map_lua(title: str,
 
 def main(argv):
     parser = argparse.ArgumentParser(
-        prog='osu_to_eity.py',
-        description='Convert osu!mania .osu to Eity map.lua')
+        prog='osu_to_Vectra.py',
+        description='Convert osu!mania .osu to Vectra map.lua')
     parser.add_argument('input', nargs='?', help='path to .osu file')
     parser.add_argument(
         'output_dir',
