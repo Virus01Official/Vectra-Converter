@@ -2,4 +2,4 @@
 A converter that converts osu!mania chart to Vectra chart
 
 # Warning
-Recommended charts below 2 stars as it will make the chart almost impossible to play
+It's recommended to use osu!mania to make your own custom charts as taking pre-existing osu!mania charts will make the Vectra chart impossible to play.
